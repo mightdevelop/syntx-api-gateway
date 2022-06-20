@@ -1,10 +1,12 @@
-import { Body, Controller, Delete, Get, Inject, Param, Post, Put } from '@nestjs/common'
+import { Body, Controller, Delete, Get, Inject, Param, Put } from '@nestjs/common'
 import { ClientGrpc } from '@nestjs/microservices'
 import { firstValueFrom, Observable } from 'rxjs'
-import { CreateUserDto } from './dto/create-user.dto'
-import { DeleteUserDto } from './dto/delete-user.dto'
-import { UpdateUserDto } from './dto/update-user.dto'
-import { User, UsersServiceClient, USERS_SERVICE_NAME } from './users.pb'
+import { UpdateUserDto } from './dto/update-user-dto'
+import {
+    User,
+    UsersServiceClient,
+    USERS_SERVICE_NAME
+} from './users.pb'
 
 @Controller('users')
 export class UsersController {
@@ -20,7 +22,7 @@ export class UsersController {
 
     @Get('/:userId')
     public async getUserById(
-        @Param('userId') userId: string
+        @Param('userId') userId: string,
     ): Promise<User> {
         return firstValueFrom(this.usersService.getUserById({ userId }))
     }
@@ -30,25 +32,19 @@ export class UsersController {
         return this.usersService.getUsers({})
     }
 
-    @Post('/')
-    public async createUser(
-        @Body() dto: CreateUserDto
-    ): Promise<User> {
-        return firstValueFrom(this.usersService.createUser(dto))
-    }
-
     @Put('/:userId')
     public async updateUser(
-        @Body() dto: UpdateUserDto
+        @Param('userId') userId: string,
+        @Body() dto: UpdateUserDto,
     ): Promise<User> {
-        return firstValueFrom(this.usersService.updateUser(dto))
+        return firstValueFrom(this.usersService.updateUser({ ...dto, userId }))
     }
 
-    @Delete('/')
+    @Delete('/:userId')
     public async deleteUser(
-        @Body() dto: DeleteUserDto
+        @Param('userId') userId: string,
     ): Promise<User> {
-        return firstValueFrom(this.usersService.deleteUser(dto))
+        return firstValueFrom(this.usersService.deleteUser({ userId }))
     }
 
 }
