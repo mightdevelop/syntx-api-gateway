@@ -1,6 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Put, UseGuards } from '@nestjs/common'
-import { Observable } from 'rxjs'
-import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard'
+import { Body, Controller, Delete, Get, Param, Put } from '@nestjs/common'
 import { UpdateUserDto } from './dto/update-user-dto'
 import { UsersService } from './services/users.service'
 import { User } from './users.pb'
@@ -17,12 +15,6 @@ export class UsersController {
         @Param('userId') userId: string,
     ): Promise<User> {
         return this.usersService.getUserById({ userId })
-    }
-
-    @Get('/')
-    @UseGuards(JwtAuthGuard)
-    public async getUsers(): Promise<Observable<User>> {
-        return this.usersService.getUsers()
     }
 
     @Put('/:userId')
