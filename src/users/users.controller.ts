@@ -1,35 +1,28 @@
-import { Body, Controller, Delete, Get, Inject, Param, Put } from '@nestjs/common'
-import { ClientGrpc } from '@nestjs/microservices'
-import { firstValueFrom, Observable } from 'rxjs'
+import { Body, Controller, Delete, Get, Param, Put, UseGuards } from '@nestjs/common'
+import { Observable } from 'rxjs'
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard'
 import { UpdateUserDto } from './dto/update-user-dto'
-import {
-    User,
-    UsersServiceClient,
-    USERS_SERVICE_NAME
-} from './users.pb'
+import { UsersService } from './services/users.service'
+import { User } from './users.pb'
 
 @Controller('users')
 export class UsersController {
 
-    private usersService: UsersServiceClient
-
-    @Inject(USERS_SERVICE_NAME)
-    private readonly client: ClientGrpc
-
-    onModuleInit(): void {
-        this.usersService = this.client.getService<UsersServiceClient>(USERS_SERVICE_NAME)
-    }
+    constructor(
+        private usersService: UsersService
+    ) {}
 
     @Get('/:userId')
     public async getUserById(
         @Param('userId') userId: string,
     ): Promise<User> {
-        return firstValueFrom(this.usersService.getUserById({ userId }))
+        return this.usersService.getUserById({ userId })
     }
 
     @Get('/')
+    @UseGuards(JwtAuthGuard)
     public async getUsers(): Promise<Observable<User>> {
-        return this.usersService.getUsers({})
+        return this.usersService.getUsers()
     }
 
     @Put('/:userId')
@@ -37,14 +30,14 @@ export class UsersController {
         @Param('userId') userId: string,
         @Body() dto: UpdateUserDto,
     ): Promise<User> {
-        return firstValueFrom(this.usersService.updateUser({ ...dto, userId }))
+        return this.usersService.updateUser({ ...dto, userId })
     }
 
     @Delete('/:userId')
     public async deleteUser(
         @Param('userId') userId: string,
     ): Promise<User> {
-        return firstValueFrom(this.usersService.deleteUser({ userId }))
+        return this.usersService.deleteUser({ userId })
     }
 
 }

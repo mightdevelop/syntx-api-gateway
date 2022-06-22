@@ -26,7 +26,6 @@ export interface LoginRequest {
 }
 
 export interface RefreshTokensRequest {
-  userId: string;
   refreshToken: string;
 }
 
