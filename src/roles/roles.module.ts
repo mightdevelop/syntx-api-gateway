@@ -2,47 +2,51 @@ import { Module } from '@nestjs/common'
 import { ClientsModule, Transport } from '@nestjs/microservices'
 import { join } from 'path'
 import 'dotenv/config'
-import { ProjectsService } from './services/roles.service'
-import { ProjectsController } from './roles.controller'
-import { INVITES_SERVICE_NAME, PROJECTS_PACKAGE_NAME, PROJECTS_SERVICE_NAME } from './projects.pb'
-import { InvitesController } from './permissions.controller'
-import { InvitesService } from './services/permissions.service'
+import { RolesService } from './services/roles.service'
+import { RolesController } from './roles.controller'
+import {
+    ROLES_SERVICE_NAME,
+    ROLES_PACKAGE_NAME,
+    PERMISSIONS_SERVICE_NAME,
+} from './roles.pb'
+import { PermissionsController } from './permissions.controller'
+import { PermissionsService } from './services/permissions.service'
 
 @Module({
     imports: [
         ClientsModule.register([
             {
-                name: PROJECTS_SERVICE_NAME,
+                name: ROLES_SERVICE_NAME,
                 transport: Transport.GRPC,
                 options: {
-                    url: '127.0.0.1:50053',
-                    package: PROJECTS_PACKAGE_NAME,
+                    url: '127.0.0.1:50055',
+                    package: ROLES_PACKAGE_NAME,
                     protoPath: join(
-                        __dirname, '..', '..', 'node_modules', 'syntx-protos', 'projects', 'projects.proto'
+                        __dirname, '..', '..', 'node_modules', 'syntx-protos', 'projects', 'roles.proto'
                     ),
                 }
             },
             {
-                name: INVITES_SERVICE_NAME,
+                name: PERMISSIONS_SERVICE_NAME,
                 transport: Transport.GRPC,
                 options: {
-                    url: '127.0.0.1:50053',
-                    package: PROJECTS_PACKAGE_NAME,
+                    url: '127.0.0.1:50055',
+                    package: ROLES_PACKAGE_NAME,
                     protoPath: join(
-                        __dirname, '..', '..', 'node_modules', 'syntx-protos', 'projects', 'projects.proto'
+                        __dirname, '..', '..', 'node_modules', 'syntx-protos', 'projects', 'roles.proto'
                     ),
                 }
             },
         ])
     ],
     providers: [
-        ProjectsService,
-        InvitesService,
+        RolesService,
+        PermissionsService,
     ],
     controllers: [
-        ProjectsController,
-        InvitesController,
+        RolesController,
+        PermissionsController,
     ],
-    exports: [ ProjectsService ]
+    exports: [ RolesService ]
 })
 export class ProjectsModule {}
