@@ -22,7 +22,7 @@ import { PermissionsService } from './services/permissions.service'
                     url: '127.0.0.1:50054',
                     package: ROLES_PACKAGE_NAME,
                     protoPath: join(
-                        __dirname, '..', '..', 'node_modules', 'syntx-protos', 'projects', 'roles.proto'
+                        __dirname, '..', '..', 'node_modules', 'syntx-protos', 'roles', 'roles.proto'
                     ),
                 }
             },
@@ -33,7 +33,7 @@ import { PermissionsService } from './services/permissions.service'
                     url: '127.0.0.1:50054',
                     package: ROLES_PACKAGE_NAME,
                     protoPath: join(
-                        __dirname, '..', '..', 'node_modules', 'syntx-protos', 'projects', 'roles.proto'
+                        __dirname, '..', '..', 'node_modules', 'syntx-protos', 'roles', 'roles.proto'
                     ),
                 }
             },
