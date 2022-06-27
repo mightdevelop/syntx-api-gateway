@@ -63,15 +63,6 @@ export class ProjectsController {
         return this.projectsService.deleteProject({ projectId })
     }
 
-    @Put('/projects/:projectId/users/:userId')
-    @UseGuards(JwtAuthGuard)
-    public async addUserToProject(
-        @Param('projectId') projectId: string,
-        @Param('userId') userId: string,
-    ): Promise<void> {
-        this.projectsService.addUserToProject({ projectId, userId })
-    }
-
     @Delete('/projects/:projectId/users/:userId')
     @UseGuards(JwtAuthGuard)
     public async removeUserFromProject(
