@@ -2,11 +2,11 @@ import { Module } from '@nestjs/common'
 import { ClientsModule, Transport } from '@nestjs/microservices'
 import { join } from 'path'
 import 'dotenv/config'
-import { ProjectsService } from './services/projects.service'
-import { ProjectsController } from './projects.controller'
+import { ProjectsService } from './services/roles.service'
+import { ProjectsController } from './roles.controller'
 import { INVITES_SERVICE_NAME, PROJECTS_PACKAGE_NAME, PROJECTS_SERVICE_NAME } from './projects.pb'
-import { InvitesController } from './invites.controller'
-import { InvitesService } from './services/invites.service'
+import { InvitesController } from './permissions.controller'
+import { InvitesService } from './services/permissions.service'
 
 @Module({
     imports: [

@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common'
+import { Body, Controller, Delete, Get, Param, Post, Query, UseGuards } from '@nestjs/common'
 import { UpdateProjectDto } from './dto/update-project-dto'
 import { CreateInviteRequest, Invite } from './projects.pb'
 import { Observable } from 'rxjs'
@@ -43,7 +43,7 @@ export class InvitesController {
         return this.invitesService.createInvite(dto)
     }
 
-    @Put('/invites/:invitesId')
+    @Delete('/invites/:invitesId')
     @UseGuards(JwtAuthGuard)
     public async deleteInviteById(
         @Param('inviteId') inviteId: string,
