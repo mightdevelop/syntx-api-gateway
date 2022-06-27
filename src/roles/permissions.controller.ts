@@ -48,11 +48,11 @@ export class PermissionsController {
 
     @Put('/users/:userId/permissions')
     @UseGuards(JwtAuthGuard)
-    public async addPermissionToUser(
+    public async addPermissionToUserInProject(
         @Query('userId') userId: string,
-        @Body() { permissionId }: { permissionId: number },
+        @Body() { permissionId, projectId }: { permissionId: number, projectId: string },
     ): Promise<Void> {
-        return this.permissionsService.addPermissionToUser({ permissionId, userId })
+        return this.permissionsService.addPermissionToUserInProject({ permissionId, projectId, userId })
     }
 
     @Delete('/roles/:roleId/permissions')
@@ -66,11 +66,11 @@ export class PermissionsController {
 
     @Delete('/users/:userId/permissions')
     @UseGuards(JwtAuthGuard)
-    public async removePermissionFromUser(
+    public async removePermissionFromUserInProject(
         @Query('userId') userId: string,
-        @Body() { permissionId }: { permissionId: number },
+        @Body() { permissionId, projectId }: { permissionId: number, projectId: string },
     ): Promise<Void> {
-        return this.permissionsService.removePermissionFromUser({ permissionId, userId })
+        return this.permissionsService.removePermissionFromUserInProject({ permissionId, userId, projectId })
     }
 
 }

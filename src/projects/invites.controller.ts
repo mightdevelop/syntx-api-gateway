@@ -1,9 +1,13 @@
 import { Body, Controller, Delete, Get, Param, Post, Query, UseGuards } from '@nestjs/common'
 import { UpdateProjectDto } from './dto/update-project-dto'
-import { CreateInviteRequest, Invite } from './projects.pb'
+import { Invite } from './projects.pb'
 import { Observable } from 'rxjs'
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard'
 import { InvitesService } from './services/invites.service'
+import { CurrentUser } from 'src/auth/decorators/current-user.decorator'
+import { UserFromRequest } from 'src/auth/types/user-from-request'
+import { PermissionsGuard } from 'src/roles/guards/permissions.guard'
+import { RequiredPermission } from 'src/roles/decorators/required-permission.decorator'
 
 @Controller()
 export class InvitesController {
@@ -13,6 +17,7 @@ export class InvitesController {
     ) {}
 
     @Get('/invites/:inviteId')
+    @UseGuards(JwtAuthGuard)
     public async getInviteById(
         @Param('inviteId') inviteId: string,
     ): Promise<Invite> {
@@ -27,24 +32,27 @@ export class InvitesController {
         return this.invitesService.getInvitesByProjectId({ projectId })
     }
 
-    @Get('/users/:userId/projects')
+    @Get('/invites')
     @UseGuards(JwtAuthGuard)
-    public async getInvitesByUserId(
-        @Param('userId') userId: string,
+    public async getMyInvites(
+        @CurrentUser() user: UserFromRequest,
     ): Promise<Observable<Invite>> {
-        return this.invitesService.getInvitesByUserId({ userId })
+        return this.invitesService.getInvitesByUserId({ userId: user.id })
     }
 
-    @Post('/invites')
-    @UseGuards(JwtAuthGuard)
+    @Post('/projects/:projectId/invites')
+    @RequiredPermission(1)
+    @UseGuards(JwtAuthGuard, PermissionsGuard)
     public async createInvite(
-        @Body() dto: CreateInviteRequest,
+        @Param('projectId') projectId: string,
+        @Body() { userId }: { userId: string },
     ): Promise<Invite> {
-        return this.invitesService.createInvite(dto)
+        return this.invitesService.createInvite({ projectId, userId })
     }
 
     @Delete('/invites/:invitesId')
-    @UseGuards(JwtAuthGuard)
+    @RequiredPermission(1)
+    @UseGuards(JwtAuthGuard, PermissionsGuard)
     public async deleteInviteById(
         @Param('inviteId') inviteId: string,
         @Body() dto: UpdateProjectDto,
@@ -52,10 +60,11 @@ export class InvitesController {
         return this.invitesService.deleteInviteById({ ...dto, inviteId })
     }
 
-    @Delete('/invites/search?projectId=:projectId&userId=:userId')
-    @UseGuards(JwtAuthGuard)
+    @Delete('/projects/:projectId/invites/search?userId=:userId')
+    @RequiredPermission(1)
+    @UseGuards(JwtAuthGuard, PermissionsGuard)
     public async deleteInviteByUserIdAndProjectId(
-        @Query('projectId') projectId: string,
+        @Param('projectId') projectId: string,
         @Query('userId') userId: string,
     ): Promise<Invite> {
         return this.invitesService.deleteInviteByUserIdAndProjectId({ projectId, userId })

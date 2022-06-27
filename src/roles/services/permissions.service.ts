@@ -1,7 +1,17 @@
 import { Inject, Injectable } from '@nestjs/common'
 import { ClientGrpc } from '@nestjs/microservices'
 import { firstValueFrom, Observable } from 'rxjs'
-import { Permission, PermissionId, PermissionIdAndRoleId, PermissionIdAndUserId, PermissionsServiceClient, PERMISSIONS_SERVICE_NAME, RoleId, UserIdAndProjectId, Void } from '../roles.pb'
+import {
+    Permission,
+    PermissionId,
+    PermissionIdAndRoleId,
+    PermissionIdAndUserIdAndProjectId,
+    PermissionsServiceClient,
+    PERMISSIONS_SERVICE_NAME,
+    RoleId,
+    UserIdAndProjectId,
+    Void
+} from '../roles.pb'
 
 @Injectable()
 export class PermissionsService {
@@ -33,16 +43,28 @@ export class PermissionsService {
         return this.permissionsService.getPermissionsByUserIdAndProjectId(dto)
     }
 
+    public async doesUserHavePermission(
+        dto: PermissionIdAndUserIdAndProjectId
+    ): Promise<boolean> {
+        return (await firstValueFrom(this.permissionsService.doesUserHavePermission(dto))).bool
+    }
+
+    public async doesRoleHavePermission(
+        dto: PermissionIdAndRoleId
+    ): Promise<boolean> {
+        return (await firstValueFrom(this.permissionsService.doesRoleHavePermission(dto))).bool
+    }
+
     public async addPermissionToRole(
         dto: PermissionIdAndRoleId
     ): Promise<Void> {
         return firstValueFrom(this.permissionsService.addPermissionToRole(dto))
     }
 
-    public async addPermissionToUser(
-        dto: PermissionIdAndUserId
+    public async addPermissionToUserInProject(
+        dto: PermissionIdAndUserIdAndProjectId
     ): Promise<Void> {
-        return firstValueFrom(this.permissionsService.addPermissionToUser(dto))
+        return firstValueFrom(this.permissionsService.addPermissionToUserInProject(dto))
     }
 
 
@@ -52,10 +74,10 @@ export class PermissionsService {
         return firstValueFrom(this.permissionsService.removePermissionFromRole(dto))
     }
 
-    public async removePermissionFromUser(
-        dto: PermissionIdAndUserId
+    public async removePermissionFromUserInProject(
+        dto: PermissionIdAndUserIdAndProjectId
     ): Promise<Void> {
-        return firstValueFrom(this.permissionsService.removePermissionFromUser(dto))
+        return firstValueFrom(this.permissionsService.removePermissionFromUserInProject(dto))
     }
 
 }
