@@ -19,7 +19,7 @@ import { PermissionsService } from './services/permissions.service'
                 name: ROLES_SERVICE_NAME,
                 transport: Transport.GRPC,
                 options: {
-                    url: '127.0.0.1:50055',
+                    url: '127.0.0.1:50054',
                     package: ROLES_PACKAGE_NAME,
                     protoPath: join(
                         __dirname, '..', '..', 'node_modules', 'syntx-protos', 'projects', 'roles.proto'
@@ -30,7 +30,7 @@ import { PermissionsService } from './services/permissions.service'
                 name: PERMISSIONS_SERVICE_NAME,
                 transport: Transport.GRPC,
                 options: {
-                    url: '127.0.0.1:50055',
+                    url: '127.0.0.1:50054',
                     package: ROLES_PACKAGE_NAME,
                     protoPath: join(
                         __dirname, '..', '..', 'node_modules', 'syntx-protos', 'projects', 'roles.proto'
