@@ -11,6 +11,7 @@ import {
 } from './roles.pb'
 import { PermissionsController } from './permissions.controller'
 import { PermissionsService } from './services/permissions.service'
+import { ProjectsModule } from 'src/projects/projects.module'
 
 @Global()
 @Module({
@@ -38,7 +39,8 @@ import { PermissionsService } from './services/permissions.service'
                     ),
                 }
             },
-        ])
+        ]),
+        ProjectsModule,
     ],
     providers: [
         RolesService,
