@@ -9,7 +9,7 @@ import {
     ProjectByIdRequest,
     ProjectsServiceClient,
     PROJECTS_SERVICE_NAME,
-    ProjectUserRequest
+    ProjectIdAndUserId
 } from '../projects.pb'
 
 @Injectable()
@@ -32,6 +32,14 @@ export class ProjectsService {
 
     public async getProjectsByUserId(userId: string): Promise<Observable<Project>> {
         return this.projectsService.getProjectsByUserId({ userId })
+    }
+
+    public async getMutualProjectsByUsersIds(usersIds: string[]): Promise<Observable<Project>> {
+        return this.projectsService.getMutualProjectsByUsersIds({ usersIds })
+    }
+
+    public async isUserProjectParticipant(dto: ProjectIdAndUserId): Promise<boolean> {
+        return !!(await firstValueFrom(this.projectsService.isUserProjectParticipant(dto))).bool
     }
 
     public async getProjectsByLeadId(leadId: string): Promise<Observable<Project>> {
@@ -57,13 +65,13 @@ export class ProjectsService {
     }
 
     public async addUserToProject(
-        dto: ProjectUserRequest
+        dto: ProjectIdAndUserId
     ): Promise<void> {
         this.projectsService.addUserToProject(dto)
     }
 
     public async removeUserFromProject(
-        dto: ProjectUserRequest
+        dto: ProjectIdAndUserId
     ): Promise<void> {
         this.projectsService.removeUserFromProject(dto)
     }

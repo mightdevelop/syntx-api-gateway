@@ -24,19 +24,23 @@ export class ProjectsController {
     @Get('/users/:userId/projects')
     @UseGuards(JwtAuthGuard)
     public async getProjectsByUserId(
+        @CurrentUser() user: UserFromRequest,
         @Param('userId') userId: string,
+        @Query('mutual') mutual: string
     ): Promise<Observable<Project>> {
+        if (mutual) {
+            return this.projectsService.getMutualProjectsByUsersIds([ user.id, userId ])
+        }
         return this.projectsService.getProjectsByUserId(userId)
     }
 
-    @Get('/projects/leadBy?leadId=:leadId')
+    @Get('/projects/byLead')
     @UseGuards(JwtAuthGuard)
     public async getProjectsByLeadId(
         @Query('leadId') leadId: string,
     ): Promise<Observable<Project>> {
         return this.projectsService.getProjectsByLeadId(leadId)
     }
-
     @Post('/projects')
     @UseGuards(JwtAuthGuard)
     public async createProject(
