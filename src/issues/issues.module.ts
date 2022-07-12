@@ -19,7 +19,7 @@ import { ColumnsController } from './controllers/columns.controller'
                 name: ISSUES_PACKAGE_NAME,
                 transport: Transport.GRPC,
                 options: {
-                    url: '127.0.0.1:50053',
+                    url: '127.0.0.1:50056',
                     package: ISSUES_PACKAGE_NAME,
                     protoPath: join(
                         __dirname, '..', '..', 'node_modules', 'syntx-protos', 'issues', 'issues.proto'
