@@ -3,6 +3,7 @@ import { ClientGrpc } from '@nestjs/microservices'
 import { firstValueFrom } from 'rxjs'
 import {
     AuthServiceClient,
+    AUTH_PACKAGE_NAME,
     AUTH_SERVICE_NAME,
     LoginRequest,
     LogoutRequest,
@@ -16,7 +17,7 @@ export class AuthService {
 
     private authService: AuthServiceClient
 
-    @Inject(AUTH_SERVICE_NAME)
+    @Inject(AUTH_PACKAGE_NAME)
     private readonly client: ClientGrpc
 
     onModuleInit(): void {

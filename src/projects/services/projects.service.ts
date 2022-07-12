@@ -9,6 +9,7 @@ import {
     ProjectByIdRequest,
     ProjectsServiceClient,
     PROJECTS_SERVICE_NAME,
+    PROJECTS_PACKAGE_NAME,
     ProjectIdAndUserId
 } from '../projects.pb'
 
@@ -17,7 +18,7 @@ export class ProjectsService {
 
     private projectsService: ProjectsServiceClient
 
-    @Inject(PROJECTS_SERVICE_NAME)
+    @Inject(PROJECTS_PACKAGE_NAME)
     private readonly client: ClientGrpc
 
     onModuleInit(): void {

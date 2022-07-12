@@ -11,6 +11,7 @@ import {
     RoleIdAndUserId,
     RolesServiceClient,
     ROLES_SERVICE_NAME,
+    ROLES_PACKAGE_NAME,
     UserId,
     UserIdAndProjectId,
 } from '../roles.pb'
@@ -20,7 +21,7 @@ export class RolesService {
 
     private rolesService: RolesServiceClient
 
-    @Inject(ROLES_SERVICE_NAME)
+    @Inject(ROLES_PACKAGE_NAME)
     private readonly client: ClientGrpc
 
     onModuleInit(): void {

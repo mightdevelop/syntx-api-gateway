@@ -4,7 +4,7 @@ import { join } from 'path'
 import 'dotenv/config'
 import { ProjectsService } from './services/projects.service'
 import { ProjectsController } from './projects.controller'
-import { INVITES_SERVICE_NAME, PROJECTS_PACKAGE_NAME, PROJECTS_SERVICE_NAME } from './projects.pb'
+import { PROJECTS_PACKAGE_NAME } from './projects.pb'
 import { InvitesController } from './invites.controller'
 import { InvitesService } from './services/invites.service'
 
@@ -12,18 +12,7 @@ import { InvitesService } from './services/invites.service'
     imports: [
         ClientsModule.register([
             {
-                name: PROJECTS_SERVICE_NAME,
-                transport: Transport.GRPC,
-                options: {
-                    url: '127.0.0.1:50053',
-                    package: PROJECTS_PACKAGE_NAME,
-                    protoPath: join(
-                        __dirname, '..', '..', 'node_modules', 'syntx-protos', 'projects', 'projects.proto'
-                    ),
-                }
-            },
-            {
-                name: INVITES_SERVICE_NAME,
+                name: PROJECTS_PACKAGE_NAME,
                 transport: Transport.GRPC,
                 options: {
                     url: '127.0.0.1:50053',

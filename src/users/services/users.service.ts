@@ -7,7 +7,8 @@ import {
     User,
     UserByIdRequest,
     UsersServiceClient,
-    USERS_SERVICE_NAME
+    USERS_SERVICE_NAME,
+    USERS_PACKAGE_NAME,
 } from '../users.pb'
 
 @Injectable()
@@ -15,7 +16,7 @@ export class UsersService {
 
     private usersService: UsersServiceClient
 
-    @Inject(USERS_SERVICE_NAME)
+    @Inject(USERS_PACKAGE_NAME)
     private readonly client: ClientGrpc
 
     onModuleInit(): void {

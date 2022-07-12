@@ -10,6 +10,7 @@ import {
     CreateInviteRequest,
     DeleteInviteByIdRequest,
     DeleteInviteByUserIdAndProjectIdRequest,
+    PROJECTS_PACKAGE_NAME,
     INVITES_SERVICE_NAME,
 } from '../projects.pb'
 
@@ -18,7 +19,7 @@ export class InvitesService {
 
     private invitesService: InvitesServiceClient
 
-    @Inject(INVITES_SERVICE_NAME)
+    @Inject(PROJECTS_PACKAGE_NAME)
     private readonly client: ClientGrpc
 
     onModuleInit(): void {

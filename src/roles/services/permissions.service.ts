@@ -8,6 +8,7 @@ import {
     PermissionIdAndUserIdAndProjectId,
     PermissionsServiceClient,
     PERMISSIONS_SERVICE_NAME,
+    ROLES_PACKAGE_NAME,
     RoleId,
     UserIdAndProjectId,
     Void
@@ -18,7 +19,7 @@ export class PermissionsService {
 
     private permissionsService: PermissionsServiceClient
 
-    @Inject(PERMISSIONS_SERVICE_NAME)
+    @Inject(ROLES_PACKAGE_NAME)
     private readonly client: ClientGrpc
 
     onModuleInit(): void {
