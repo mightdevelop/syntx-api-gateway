@@ -11,8 +11,8 @@ export class PermissionsGuard implements CanActivate {
 
     constructor(
         @Inject(Reflector) private reflector: Reflector,
-        @Inject(PermissionsService) private permissionsService: PermissionsService,
-        @Inject(ProjectsService) private projectsService: ProjectsService,
+        private permissionsService: PermissionsService,
+        private projectsService: ProjectsService,
     ) { }
 
     async canActivate(context: ExecutionContext): Promise<boolean> {

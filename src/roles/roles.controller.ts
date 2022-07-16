@@ -1,14 +1,16 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common'
+import { BadRequestException, Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common'
 import { RolesService } from './services/roles.service'
 import { CreateRoleRequest, Role, UserId } from './roles.pb'
 import { Observable } from 'rxjs'
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard'
+import { ProjectsService } from 'src/projects/services/projects.service'
 
 @Controller()
 export class RolesController {
 
     constructor(
-        private rolesService: RolesService
+        private rolesService: RolesService,
+        private projectsService: ProjectsService,
     ) {}
 
     @Get('/roles/:roleId')
@@ -56,6 +58,10 @@ export class RolesController {
     public async createRole(
         @Body() dto: CreateRoleRequest,
     ): Promise<Role> {
+        const project = await this.projectsService.getProjectById({ projectId: dto.projectId })
+        if (!project) {
+            throw new BadRequestException({ message: 'Project not found' })
+        }
         return this.rolesService.createRole(dto)
     }
 

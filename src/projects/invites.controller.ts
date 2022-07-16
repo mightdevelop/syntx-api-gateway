@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Query, UseGuards } from '@nestjs/common'
+import { BadRequestException, Body, Controller, Delete, Get, Param, Post, Query, UseGuards } from '@nestjs/common'
 import { UpdateProjectDto } from './dto/update-project-dto'
 import { Invite } from './projects.pb'
 import { Observable } from 'rxjs'
@@ -8,12 +8,14 @@ import { CurrentUser } from 'src/auth/decorators/current-user.decorator'
 import { UserFromRequest } from 'src/auth/types/user-from-request'
 import { PermissionsGuard } from 'src/roles/guards/permissions.guard'
 import { RequiredPermission } from 'src/roles/decorators/required-permission.decorator'
+import { UsersService } from 'src/users/services/users.service'
 
 @Controller()
 export class InvitesController {
 
     constructor(
-        private invitesService: InvitesService
+        private invitesService: InvitesService,
+        private usersService: UsersService,
     ) {}
 
     @Get('/invites/:inviteId')
@@ -47,6 +49,10 @@ export class InvitesController {
         @Param('projectId') projectId: string,
         @Body() { userId }: { userId: string },
     ): Promise<Invite> {
+        const user = await this.usersService.getUserById({ userId })
+        if (!user) {
+            throw new BadRequestException({ message: 'User not found' })
+        }
         return this.invitesService.createInvite({ projectId, userId })
     }
 

@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
 import { AuthModule } from './auth/auth.module'
+import { CacheModule } from './cache/cache.module'
 import { IssuesModule } from './issues/issues.module'
 import { ProjectsModule } from './projects/projects.module'
 import { RolesModule } from './roles/roles.module'
@@ -16,6 +17,7 @@ import { UsersModule } from './users/users.module'
         ProjectsModule,
         RolesModule,
         IssuesModule,
+        CacheModule,
     ],
 })
 export class ApiGatewayModule {}

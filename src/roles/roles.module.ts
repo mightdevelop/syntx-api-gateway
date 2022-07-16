@@ -10,6 +10,7 @@ import {
 import { PermissionsController } from './permissions.controller'
 import { PermissionsService } from './services/permissions.service'
 import { ProjectsModule } from 'src/projects/projects.module'
+import { CacheModule } from 'src/cache/cache.module'
 
 @Global()
 @Module({
@@ -28,6 +29,7 @@ import { ProjectsModule } from 'src/projects/projects.module'
             },
         ]),
         ProjectsModule,
+        CacheModule,
     ],
     providers: [
         RolesService,

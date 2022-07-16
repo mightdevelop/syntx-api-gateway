@@ -39,38 +39,40 @@ export class PermissionsController {
 
     @Put('/roles/:roleId/permissions')
     @UseGuards(JwtAuthGuard)
-    public async addPermissionToRole(
+    public async addPermissionsToRole(
         @Query('roleId') roleId: string,
-        @Body() { permissionId }: { permissionId: number },
+        @Body() { permissionsIds }: { permissionsIds: number[] },
     ): Promise<Void> {
-        return this.permissionsService.addPermissionToRole({ permissionId, roleId })
+        return this.permissionsService.addPermissionsToRole({ permissionsIds, roleId })
     }
 
     @Put('/users/:userId/permissions')
     @UseGuards(JwtAuthGuard)
-    public async addPermissionToUserInProject(
+    public async addPermissionsToUserInProject(
         @Query('userId') userId: string,
-        @Body() { permissionId, projectId }: { permissionId: number, projectId: string },
+        @Body() { permissionsIds, projectId }: { permissionsIds: number[], projectId: string },
     ): Promise<Void> {
-        return this.permissionsService.addPermissionToUserInProject({ permissionId, projectId, userId })
+        return this.permissionsService.addPermissionsToUserInProject({ permissionsIds, projectId, userId })
     }
 
     @Delete('/roles/:roleId/permissions')
     @UseGuards(JwtAuthGuard)
-    public async removePermissionFromRole(
+    public async removePermissionsFromRole(
         @Query('roleId') roleId: string,
-        @Body() { permissionId }: { permissionId: number },
+        @Body() { permissionsIds }: { permissionsIds: number[] },
     ): Promise<Void> {
-        return this.permissionsService.removePermissionFromRole({ permissionId, roleId })
+        return this.permissionsService.removePermissionsFromRole({ permissionsIds, roleId })
     }
 
     @Delete('/users/:userId/permissions')
     @UseGuards(JwtAuthGuard)
-    public async removePermissionFromUserInProject(
+    public async removePermissionsFromUserInProject(
         @Query('userId') userId: string,
-        @Body() { permissionId, projectId }: { permissionId: number, projectId: string },
+        @Body() { permissionsIds, projectId }: { permissionsIds: number[], projectId: string },
     ): Promise<Void> {
-        return this.permissionsService.removePermissionFromUserInProject({ permissionId, userId, projectId })
+        return this.permissionsService.removePermissionsFromUserInProject(
+            { permissionsIds, userId, projectId }
+        )
     }
 
 }

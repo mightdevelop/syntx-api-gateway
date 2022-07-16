@@ -1,6 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common'
 import { ClientGrpc } from '@nestjs/microservices'
 import { firstValueFrom, Observable } from 'rxjs'
+import { PermissionsCacheService } from 'src/cache/services/permissions-cache.service'
 import {
     Permission,
     PermissionId,
@@ -11,7 +12,9 @@ import {
     ROLES_PACKAGE_NAME,
     RoleId,
     UserIdAndProjectId,
-    Void
+    Void,
+    PermissionsIdsAndRoleId,
+    PermissionsIdsAndUserIdAndProjectId
 } from '../roles.pb'
 
 @Injectable()
@@ -19,11 +22,16 @@ export class PermissionsService {
 
     private permissionsService: PermissionsServiceClient
 
+    constructor(
+        private permissionsCacheService: PermissionsCacheService
+    ) {}
+
     @Inject(ROLES_PACKAGE_NAME)
     private readonly client: ClientGrpc
 
     onModuleInit(): void {
-        this.permissionsService = this.client.getService<PermissionsServiceClient>(PERMISSIONS_SERVICE_NAME)
+        this.permissionsService = this.client
+            .getService<PermissionsServiceClient>(PERMISSIONS_SERVICE_NAME)
     }
 
     public async getPermissionById(
@@ -47,7 +55,12 @@ export class PermissionsService {
     public async doesUserHavePermission(
         dto: PermissionIdAndUserIdAndProjectId
     ): Promise<boolean> {
-        return (await firstValueFrom(this.permissionsService.doesUserHavePermission(dto))).bool
+        let bool = await this.permissionsCacheService.doesUserHavePermission(dto)
+        if (bool) {
+            return bool
+        }
+        bool = (await firstValueFrom(this.permissionsService.doesUserHavePermission(dto))).bool
+        return bool
     }
 
     public async doesRoleHavePermission(
@@ -56,29 +69,29 @@ export class PermissionsService {
         return (await firstValueFrom(this.permissionsService.doesRoleHavePermission(dto))).bool
     }
 
-    public async addPermissionToRole(
-        dto: PermissionIdAndRoleId
+    public async addPermissionsToRole(
+        dto: PermissionsIdsAndRoleId
     ): Promise<Void> {
-        return firstValueFrom(this.permissionsService.addPermissionToRole(dto))
+        return firstValueFrom(this.permissionsService.addPermissionsToRole(dto))
     }
 
-    public async addPermissionToUserInProject(
-        dto: PermissionIdAndUserIdAndProjectId
+    public async addPermissionsToUserInProject(
+        dto: PermissionsIdsAndUserIdAndProjectId
     ): Promise<Void> {
-        return firstValueFrom(this.permissionsService.addPermissionToUserInProject(dto))
+        return firstValueFrom(this.permissionsService.addPermissionsToUserInProject(dto))
     }
 
 
-    public async removePermissionFromRole(
-        dto: PermissionIdAndRoleId
+    public async removePermissionsFromRole(
+        dto: PermissionsIdsAndRoleId
     ): Promise<Void> {
-        return firstValueFrom(this.permissionsService.removePermissionFromRole(dto))
+        return firstValueFrom(this.permissionsService.removePermissionsFromRole(dto))
     }
 
-    public async removePermissionFromUserInProject(
-        dto: PermissionIdAndUserIdAndProjectId
+    public async removePermissionsFromUserInProject(
+        dto: PermissionsIdsAndUserIdAndProjectId
     ): Promise<Void> {
-        return firstValueFrom(this.permissionsService.removePermissionFromUserInProject(dto))
+        return firstValueFrom(this.permissionsService.removePermissionsFromUserInProject(dto))
     }
 
 }

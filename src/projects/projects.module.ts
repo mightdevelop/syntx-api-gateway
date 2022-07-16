@@ -7,6 +7,7 @@ import { ProjectsController } from './projects.controller'
 import { PROJECTS_PACKAGE_NAME } from './projects.pb'
 import { InvitesController } from './invites.controller'
 import { InvitesService } from './services/invites.service'
+import { UsersModule } from 'src/users/users.module'
 
 @Module({
     imports: [
@@ -22,7 +23,8 @@ import { InvitesService } from './services/invites.service'
                     ),
                 }
             },
-        ])
+        ]),
+        UsersModule,
     ],
     providers: [
         ProjectsService,
