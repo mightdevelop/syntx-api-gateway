@@ -42,7 +42,7 @@ export class AuthController {
     public async logout(
         @Body() dto: LogoutRequest
     ): Promise<boolean> {
-        return !!this.authService.logout(dto)
+        return this.authService.logout(dto)
     }
 
 }
