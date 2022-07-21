@@ -1,14 +1,14 @@
 import { Inject, Injectable } from '@nestjs/common'
 import { ClientGrpc } from '@nestjs/microservices'
-import { firstValueFrom, Observable } from 'rxjs'
+import { firstValueFrom } from 'rxjs'
 import {
     DeleteUserRequest,
     UpdateUserRequest,
     User,
-    UserByIdRequest,
     UsersServiceClient,
     USERS_SERVICE_NAME,
     USERS_PACKAGE_NAME,
+    UserId,
 } from '../users.pb'
 
 @Injectable()
@@ -24,13 +24,9 @@ export class UsersService {
     }
 
     public async getUserById(
-        dto: UserByIdRequest
+        dto: UserId
     ): Promise<User> {
         return firstValueFrom(this.usersService.getUserById(dto))
-    }
-
-    public async getUsers(): Promise<Observable<User>> {
-        return this.usersService.getUsers({})
     }
 
     public async updateUser(

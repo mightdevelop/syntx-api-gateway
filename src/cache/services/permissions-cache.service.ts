@@ -6,7 +6,7 @@ import {
     PERMISSIONS_CACHE_SERVICE_NAME,
     CACHE_PACKAGE_NAME,
     DoesUserHavePermissionRequest,
-    ChangeRolePermissionsRequest,
+    RemovePermissionsFromRoleRequest,
 } from '../cache.pb'
 
 @Injectable()
@@ -28,7 +28,7 @@ export class PermissionsCacheService {
     }
 
     public async removePermissionsFromRole(
-        dto: ChangeRolePermissionsRequest
+        dto: RemovePermissionsFromRoleRequest
     ): Promise<void> {
         this.cacheService.removePermissionsFromRole(dto)
     }

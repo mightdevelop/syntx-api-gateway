@@ -8,6 +8,7 @@ import {
     Column,
     BoardIdAndColumnName,
     ColumnIdAndName,
+    SearchColumnsParams,
 } from '../issues.pb'
 
 @Injectable()
@@ -26,8 +27,8 @@ export class ColumnsService {
         return firstValueFrom(this.columnsService.getColumnById({ columnId }))
     }
 
-    public async getColumnsByBoardId(boardId: string): Promise<Observable<Column>> {
-        return this.columnsService.getColumnsByBoardId({ boardId })
+    public searchColumns(dto: SearchColumnsParams): Observable<Column> {
+        return this.columnsService.searchColumns(dto)
     }
 
     public async createColumn(dto: BoardIdAndColumnName): Promise<Column> {

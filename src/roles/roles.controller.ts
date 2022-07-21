@@ -20,21 +20,32 @@ export class RolesController {
         return this.rolesService.getRoleById({ roleId })
     }
 
-    @Get('/projects/:projectId/roles')
+    @Get('/projects/:projectId/roles?')
     @UseGuards(JwtAuthGuard)
     public async getRolesByProjectId(
         @Param('projectId') projectId: string,
+        @Query('limit') limit: string,
     ): Promise<Observable<Role>> {
-        return this.rolesService.getRolesByProjectId({ projectId })
+        return this.rolesService.searchRoles({
+            projectId,
+            rolesIds: [],
+            limit: +limit,
+        })
     }
 
-    @Get('/roles/search?projectId=:projectId&userId=:userId')
+    @Get('/roles/search?')
     @UseGuards(JwtAuthGuard)
     public async getRolesByUserIdAndProjectId(
         @Query('projectId') projectId: string,
         @Query('userId') userId: string,
+        @Query('limit') limit: string,
     ): Promise<Observable<Role>> {
-        return this.rolesService.getRolesByUserIdAndProjectId({ projectId, userId })
+        return this.rolesService.searchRoles({
+            userId,
+            projectId,
+            rolesIds: [],
+            limit: +limit,
+        })
     }
 
     @Get('/roles/:roleId/users')
@@ -43,14 +54,6 @@ export class RolesController {
         @Param('roleId') roleId: string,
     ): Promise<Observable<UserId>> {
         return this.rolesService.getUsersIdsByRoleId({ roleId })
-    }
-
-    @Get('/roles/search?roleName=:roleName')
-    @UseGuards(JwtAuthGuard)
-    public async getRoleByName(
-        @Query('roleName') roleName: string,
-    ): Promise<Role> {
-        return this.rolesService.getRoleByName({ roleName })
     }
 
     @Post('/roles')

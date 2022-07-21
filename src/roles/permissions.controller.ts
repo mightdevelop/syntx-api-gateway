@@ -20,21 +20,40 @@ export class PermissionsController {
         return this.permissionsService.getPermissionById({ permissionId: +permissionId })
     }
 
-    @Get('/roles/:roleId/permissions')
+    @Get('/roles/:roleId/permissions?')
     @UseGuards(JwtAuthGuard)
     public async getPermissionsByRoleId(
         @Query('roleId') roleId: string,
+        @Query('limit') limit: string,
     ): Promise<Observable<Permission>> {
-        return this.permissionsService.getPermissionsByRoleId({ roleId })
+        return this.permissionsService.searchPermissions({
+            params: {
+                $case: 'roleId',
+                roleId,
+            },
+            permissionsIds: [],
+            limit: +limit,
+        })
     }
 
-    @Get('/users/:userId/permissions?projectId=:projectId')
+    @Get('/users/:userId/permissions?')
     @UseGuards(JwtAuthGuard)
-    public async getPermissionsByUserId(
+    public async getPermissionsByUserIdAndProjectId(
         @Param('userId') userId: string,
-        @Query('groupId') projectId: string,
+        @Query('projectId') projectId: string,
+        @Query('limit') limit: string,
     ): Promise<Observable<Permission>> {
-        return this.permissionsService.getPermissionsByUserIdAndProjectId({ userId, projectId })
+        return this.permissionsService.searchPermissions({
+            params: {
+                $case: 'userIdAndProjectId',
+                userIdAndProjectId: {
+                    userId,
+                    projectId,
+                }
+            },
+            permissionsIds: [],
+            limit: +limit,
+        })
     }
 
     @Put('/roles/:roleId/permissions')

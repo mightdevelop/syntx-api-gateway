@@ -44,6 +44,13 @@ export interface ColumnIdAndName {
   columnName: string;
 }
 
+export interface SearchColumnsParams {
+  boardId?: string | undefined;
+  columnsIds: string[];
+  limit?: number | undefined;
+  offset?: number | undefined;
+}
+
 export interface Issue {
   id: string;
   columnId: string;
@@ -69,6 +76,14 @@ export interface UpdateIssueRequest {
 
 export interface IssueId {
   issueId: string;
+}
+
+export interface SearchIssuesParams {
+  columnId?: string | undefined;
+  epicId?: string | undefined;
+  issuesIds: string[];
+  limit?: number | undefined;
+  offset?: number | undefined;
 }
 
 export interface Epic {
@@ -107,11 +122,13 @@ export interface UpdateEpicRequest {
   dueDate?: Date | undefined;
 }
 
-export interface EpicsSearchParams {
+export interface SearchEpicsParams {
   columnId?: string | undefined;
   minStartDate?: Date | undefined;
   maxDueDate?: Date | undefined;
   epicsIds: string[];
+  limit?: number | undefined;
+  offset?: number | undefined;
 }
 
 export interface Dependency {
@@ -129,10 +146,12 @@ export interface CreateDependencyRequest {
   blockedEpicId: string;
 }
 
-export interface DependenciesSearchParams {
+export interface SearchDependenciesParams {
   blockingEpicId?: string | undefined;
   blockedEpicId?: string | undefined;
   dependenciesIds: string[];
+  limit?: number | undefined;
+  offset?: number | undefined;
 }
 
 export const ISSUES_PACKAGE_NAME = "issues";
@@ -198,7 +217,7 @@ export const BOARDS_SERVICE_NAME = "BoardsService";
 export interface ColumnsServiceClient {
   getColumnById(request: ColumnId): Observable<Column>;
 
-  getColumnsByBoardId(request: BoardId): Observable<Column>;
+  searchColumns(request: SearchColumnsParams): Observable<Column>;
 
   createColumn(request: BoardIdAndColumnName): Observable<Column>;
 
@@ -212,7 +231,7 @@ export interface ColumnsServiceController {
     request: ColumnId
   ): Promise<Column> | Observable<Column> | Column;
 
-  getColumnsByBoardId(request: BoardId): Observable<Column>;
+  searchColumns(request: SearchColumnsParams): Observable<Column>;
 
   createColumn(
     request: BoardIdAndColumnName
@@ -231,7 +250,7 @@ export function ColumnsServiceControllerMethods() {
   return function (constructor: Function) {
     const grpcMethods: string[] = [
       "getColumnById",
-      "getColumnsByBoardId",
+      "searchColumns",
       "createColumn",
       "updateColumn",
       "deleteColumn",
@@ -267,9 +286,7 @@ export const COLUMNS_SERVICE_NAME = "ColumnsService";
 export interface IssuesServiceClient {
   getIssueById(request: IssueId): Observable<Issue>;
 
-  getIssuesByColumnId(request: ColumnId): Observable<Issue>;
-
-  getIssuesByEpicId(request: EpicId): Observable<Issue>;
+  searchIssues(request: SearchIssuesParams): Observable<Issue>;
 
   createIssue(request: CreateIssueRequest): Observable<Issue>;
 
@@ -281,9 +298,7 @@ export interface IssuesServiceClient {
 export interface IssuesServiceController {
   getIssueById(request: IssueId): Promise<Issue> | Observable<Issue> | Issue;
 
-  getIssuesByColumnId(request: ColumnId): Observable<Issue>;
-
-  getIssuesByEpicId(request: EpicId): Observable<Issue>;
+  searchIssues(request: SearchIssuesParams): Observable<Issue>;
 
   createIssue(
     request: CreateIssueRequest
@@ -300,8 +315,7 @@ export function IssuesServiceControllerMethods() {
   return function (constructor: Function) {
     const grpcMethods: string[] = [
       "getIssueById",
-      "getIssuesByColumnId",
-      "getIssuesByEpicId",
+      "searchIssues",
       "createIssue",
       "updateIssue",
       "deleteIssue",
@@ -337,7 +351,7 @@ export const ISSUES_SERVICE_NAME = "IssuesService";
 export interface EpicsServiceClient {
   getEpicById(request: EpicId): Observable<Epic>;
 
-  searchEpics(request: EpicsSearchParams): Observable<Epic>;
+  searchEpics(request: SearchEpicsParams): Observable<Epic>;
 
   createEpic(request: CreateEpicRequest): Observable<Epic>;
 
@@ -349,7 +363,7 @@ export interface EpicsServiceClient {
 export interface EpicsServiceController {
   getEpicById(request: EpicId): Promise<Epic> | Observable<Epic> | Epic;
 
-  searchEpics(request: EpicsSearchParams): Observable<Epic>;
+  searchEpics(request: SearchEpicsParams): Observable<Epic>;
 
   createEpic(
     request: CreateEpicRequest
@@ -402,7 +416,7 @@ export const EPICS_SERVICE_NAME = "EpicsService";
 export interface DependenciesServiceClient {
   getDependencyById(request: DependencyId): Observable<Dependency>;
 
-  searchDependencies(request: DependenciesSearchParams): Observable<Dependency>;
+  searchDependencies(request: SearchDependenciesParams): Observable<Dependency>;
 
   createDependency(request: CreateDependencyRequest): Observable<Dependency>;
 
@@ -414,7 +428,7 @@ export interface DependenciesServiceController {
     request: DependencyId
   ): Promise<Dependency> | Observable<Dependency> | Dependency;
 
-  searchDependencies(request: DependenciesSearchParams): Observable<Dependency>;
+  searchDependencies(request: SearchDependenciesParams): Observable<Dependency>;
 
   createDependency(
     request: CreateDependencyRequest

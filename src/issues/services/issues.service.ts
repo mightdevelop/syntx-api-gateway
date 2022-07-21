@@ -8,6 +8,7 @@ import {
     Issue,
     CreateIssueRequest,
     UpdateIssueRequest,
+    SearchIssuesParams,
 } from '../issues.pb'
 
 @Injectable()
@@ -26,12 +27,8 @@ export class IssuesService {
         return firstValueFrom(this.issuesService.getIssueById({ issueId }))
     }
 
-    public async getIssuesByColumnId(columnId: string): Promise<Observable<Issue>> {
-        return this.issuesService.getIssuesByColumnId({ columnId })
-    }
-
-    public async getIssuesByEpicId(epicId: string): Promise<Observable<Issue>> {
-        return this.issuesService.getIssuesByEpicId({ epicId })
+    public searchIssues(dto: SearchIssuesParams): Observable<Issue> {
+        return this.issuesService.searchIssues(dto)
     }
 
     public async createIssue(dto: CreateIssueRequest): Promise<Issue> {

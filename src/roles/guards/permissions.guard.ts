@@ -4,6 +4,7 @@ import { Request } from 'src/auth/types/request'
 import { PERMISSION_KEY } from '../decorators/required-permission.decorator'
 import { PermissionsService } from '../services/permissions.service'
 import { ProjectsService } from '../../projects/services/projects.service'
+import { firstValueFrom } from 'rxjs'
 
 
 @Injectable()
@@ -28,18 +29,24 @@ export class PermissionsGuard implements CanActivate {
         const projectId = req.body.projectId || req.params.projectId || req.query.projectId
         const userId = req.user.id
 
-        const isUserProjectPasticipant = await this.projectsService.getProjectsByUserId(userId)
+        const isUserProjectPasticipant = await this.projectsService.isUserProjectParticipant({
+            projectId, userId
+        })
         if (!isUserProjectPasticipant)
             return false
 
         if (!permissionId)
             return true
 
-        const isUserHaveRequiredPermission = await this.permissionsService.doesUserHavePermission({
-            permissionId,
-            userId,
-            projectId,
-        })
+        const isUserHaveRequiredPermission = !!await firstValueFrom(
+            this.permissionsService.searchPermissions({
+                permissionsIds: [ permissionId ],
+                params: {
+                    $case: 'userIdAndProjectId',
+                    userIdAndProjectId: { userId, projectId }
+                }
+            })
+        )
         return isUserHaveRequiredPermission
     }
 }

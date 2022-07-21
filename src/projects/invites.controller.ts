@@ -26,20 +26,30 @@ export class InvitesController {
         return this.invitesService.getInviteById({ inviteId })
     }
 
-    @Get('/projects/:projectId/invites')
+    @Get('/projects/:projectId/invites?')
     @UseGuards(JwtAuthGuard)
     public async getInvitesByProjectId(
-        @Query('projectId') projectId: string,
+        @Param('projectId') projectId: string,
+        @Query('limit') limit: string,
     ): Promise<Observable<Invite>> {
-        return this.invitesService.getInvitesByProjectId({ projectId })
+        return this.invitesService.searchInvites({
+            projectId,
+            invitesIds: [],
+            limit: + limit,
+        })
     }
 
-    @Get('/invites')
+    @Get('/invites?')
     @UseGuards(JwtAuthGuard)
     public async getMyInvites(
         @CurrentUser() user: UserFromRequest,
+        @Query('limit') limit: string,
     ): Promise<Observable<Invite>> {
-        return this.invitesService.getInvitesByUserId({ userId: user.id })
+        return this.invitesService.searchInvites({
+            userId: user.id,
+            invitesIds: [],
+            limit: + limit,
+        })
     }
 
     @Post('/projects/:projectId/invites')
@@ -66,7 +76,7 @@ export class InvitesController {
         return this.invitesService.deleteInviteById({ ...dto, inviteId })
     }
 
-    @Delete('/projects/:projectId/invites/search?userId=:userId')
+    @Delete('/projects/:projectId/invites/search?')
     @RequiredPermission(1)
     @UseGuards(JwtAuthGuard, PermissionsGuard)
     public async deleteInviteByUserIdAndProjectId(

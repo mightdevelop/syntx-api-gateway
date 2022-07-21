@@ -18,7 +18,7 @@ export class DependenciesController {
         return this.dependenciesService.getDependencyById(dependencyId)
     }
 
-    @Get('/search?blockedEpicId=:blockedEpicId&blockingEpicId=:blockingEpicId')
+    @Get('/search?')
     @UseGuards(JwtAuthGuard)
     public async searchDependencies(
         @Query('blockedEpicId') blockedEpicId: string,

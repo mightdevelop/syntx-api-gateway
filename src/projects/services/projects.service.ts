@@ -4,13 +4,13 @@ import { firstValueFrom, Observable } from 'rxjs'
 import {
     CreateProjectRequest,
     UpdateProjectRequest,
-    DeleteProjectRequest,
     Project,
-    ProjectByIdRequest,
     ProjectsServiceClient,
     PROJECTS_SERVICE_NAME,
     PROJECTS_PACKAGE_NAME,
-    ProjectIdAndUserId
+    ProjectIdAndUserId,
+    SearchProjectsParams,
+    ProjectId
 } from '../projects.pb'
 
 @Injectable()
@@ -26,25 +26,17 @@ export class ProjectsService {
     }
 
     public async getProjectById(
-        dto: ProjectByIdRequest
+        dto: ProjectId
     ): Promise<Project> {
         return firstValueFrom(this.projectsService.getProjectById(dto))
     }
 
-    public async getProjectsByUserId(userId: string): Promise<Observable<Project>> {
-        return this.projectsService.getProjectsByUserId({ userId })
-    }
-
-    public async getMutualProjectsByUsersIds(usersIds: string[]): Promise<Observable<Project>> {
-        return this.projectsService.getMutualProjectsByUsersIds({ usersIds })
+    public searchProjects(dto: SearchProjectsParams): Observable<Project> {
+        return this.projectsService.searchProjects(dto)
     }
 
     public async isUserProjectParticipant(dto: ProjectIdAndUserId): Promise<boolean> {
         return !!(await firstValueFrom(this.projectsService.isUserProjectParticipant(dto))).bool
-    }
-
-    public async getProjectsByLeadId(leadId: string): Promise<Observable<Project>> {
-        return this.projectsService.getProjectsByLeadId({ leadId })
     }
 
     public async createProject(
@@ -60,7 +52,7 @@ export class ProjectsService {
     }
 
     public async deleteProject(
-        dto: DeleteProjectRequest
+        dto: ProjectId
     ): Promise<Project> {
         return firstValueFrom(this.projectsService.deleteProject(dto))
     }

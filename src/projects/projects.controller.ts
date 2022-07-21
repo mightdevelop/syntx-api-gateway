@@ -21,26 +21,37 @@ export class ProjectsController {
         return this.projectsService.getProjectById({ projectId })
     }
 
-    @Get('/users/:userId/projects')
+    @Get('/users/:userId/projects?')
     @UseGuards(JwtAuthGuard)
-    public async getProjectsByUserId(
+    public async getMutualProjectsByUserId(
         @CurrentUser() user: UserFromRequest,
         @Param('userId') userId: string,
-        @Query('mutual') mutual: string
+        @Query('mutual') mutual: string,
+        @Query('limit') limit: string,
     ): Promise<Observable<Project>> {
-        if (mutual) {
-            return this.projectsService.getMutualProjectsByUsersIds([ user.id, userId ])
-        }
-        return this.projectsService.getProjectsByUserId(userId)
+        return this.projectsService.searchProjects({
+            limit: +limit,
+            projectsIds: [],
+            usersIds: mutual
+                ? [ user.id, userId ]
+                : [ userId ]
+        })
     }
 
-    @Get('/projects/byLead')
+    @Get('/projects/byLead?')
     @UseGuards(JwtAuthGuard)
     public async getProjectsByLeadId(
         @Query('leadId') leadId: string,
+        @Query('limit') limit: string,
     ): Promise<Observable<Project>> {
-        return this.projectsService.getProjectsByLeadId(leadId)
+        return this.projectsService.searchProjects({
+            leadId,
+            limit: +limit,
+            projectsIds: [],
+            usersIds: [],
+        })
     }
+
     @Post('/projects')
     @UseGuards(JwtAuthGuard)
     public async createProject(

@@ -19,15 +19,20 @@ export class IssuesController {
         return this.issuesService.getIssueById(issueId)
     }
 
-    @Get('/search?columnId=:columnId')
+    @Get('/search?')
     @UseGuards(JwtAuthGuard)
     public async getIssuesByColumnId(
         @Query('columnId') columnId: string,
+        @Query('limit') limit: string,
     ): Promise<Observable<Issue>> {
-        return this.issuesService.getIssuesByColumnId(columnId)
+        return this.issuesService.searchIssues({
+            columnId,
+            issuesIds: [],
+            limit: +limit,
+        })
     }
 
-    // @Get('/search?epicId=:epicId')
+    // @Get('/search?')
     // @UseGuards(JwtAuthGuard)
     // public async getIssuesByEpicId(
     //     @Query('epicId') epicId: string,

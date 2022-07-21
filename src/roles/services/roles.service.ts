@@ -3,9 +3,7 @@ import { ClientGrpc } from '@nestjs/microservices'
 import { firstValueFrom, Observable } from 'rxjs'
 import {
     CreateRoleRequest,
-    ProjectId,
     Role,
-    RoleByNameRequest,
     RoleId,
     RoleIdAndName,
     RoleIdAndUserId,
@@ -13,7 +11,7 @@ import {
     ROLES_SERVICE_NAME,
     ROLES_PACKAGE_NAME,
     UserId,
-    UserIdAndProjectId,
+    SearchRolesParams,
 } from '../roles.pb'
 
 @Injectable()
@@ -34,29 +32,16 @@ export class RolesService {
         return firstValueFrom(this.rolesService.getRoleById(dto))
     }
 
-    public async getRolesByProjectId(
-        dto: ProjectId
-    ): Promise<Observable<Role>> {
-        return this.rolesService.getRolesByProjectId(dto)
+    public searchRoles(
+        dto: SearchRolesParams
+    ): Observable<Role> {
+        return this.rolesService.searchRoles(dto)
     }
-
-    public async getRolesByUserIdAndProjectId(
-        dto: UserIdAndProjectId
-    ): Promise<Observable<Role>> {
-        return this.rolesService.getRolesByUserIdAndProjectId(dto)
-    }
-
 
     public async getUsersIdsByRoleId(
         dto: RoleId
     ): Promise<Observable<UserId>> {
         return this.rolesService.getUsersIdsByRoleId(dto)
-    }
-
-    public async getRoleByName(
-        dto: RoleByNameRequest
-    ): Promise<Role> {
-        return firstValueFrom(this.rolesService.getRoleByName(dto))
     }
 
     public async createRole(

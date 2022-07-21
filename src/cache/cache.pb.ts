@@ -3,25 +3,23 @@ import { GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices";
 import Long from "long";
 import * as _m0 from "protobufjs/minimal";
 import { Observable } from "rxjs";
-import { Any } from "./google/protobuf/any.pb";
 
 export const protobufPackage = "cache";
 
 export interface Void {}
 
 export interface Cache {
-  data: string;
+  jsonData: string;
 }
 
-export interface CacheKey {
-  packageName: string;
-  rpcMethod: string;
-  rpcArg: string;
+export interface EntityKey {
+  entityName: string;
+  entityId: string;
 }
 
-export interface SetCacheRequest {
-  key: CacheKey | undefined;
-  data: Any[];
+export interface SetEntityByKey {
+  entityKey: EntityKey | undefined;
+  jsonData: string;
   ttl?: number | undefined;
 }
 
@@ -31,7 +29,14 @@ export interface DoesUserHavePermissionRequest {
   permissionId: number;
 }
 
-export interface ChangeRolePermissionsRequest {
+export interface AddPermissionsToUserRequest {
+  userId: string;
+  projectId: string;
+  roleId?: string | undefined;
+  permissionId: number;
+}
+
+export interface RemovePermissionsFromRoleRequest {
   roleId: string;
   permissionsIds: number[];
 }
@@ -42,29 +47,39 @@ export interface Bool {
 
 export const CACHE_PACKAGE_NAME = "cache";
 
-export interface CacheServiceClient {
-  getCacheByKey(request: CacheKey): Observable<Cache>;
+export interface EntitiesCacheServiceClient {
+  getEntityByKey(request: EntityKey): Observable<Cache>;
 
-  setCacheByKey(request: SetCacheRequest): Observable<Void>;
+  setEntityByKey(request: SetEntityByKey): Observable<Void>;
+
+  delEntityByKey(request: EntityKey): Observable<Void>;
 }
 
-export interface CacheServiceController {
-  getCacheByKey(request: CacheKey): Promise<Cache> | Observable<Cache> | Cache;
+export interface EntitiesCacheServiceController {
+  getEntityByKey(
+    request: EntityKey
+  ): Promise<Cache> | Observable<Cache> | Cache;
 
-  setCacheByKey(
-    request: SetCacheRequest
+  setEntityByKey(
+    request: SetEntityByKey
   ): Promise<Void> | Observable<Void> | Void;
+
+  delEntityByKey(request: EntityKey): Promise<Void> | Observable<Void> | Void;
 }
 
-export function CacheServiceControllerMethods() {
+export function EntitiesCacheServiceControllerMethods() {
   return function (constructor: Function) {
-    const grpcMethods: string[] = ["getCacheByKey", "setCacheByKey"];
+    const grpcMethods: string[] = [
+      "getEntityByKey",
+      "setEntityByKey",
+      "delEntityByKey",
+    ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(
         constructor.prototype,
         method
       );
-      GrpcMethod("CacheService", method)(
+      GrpcMethod("EntitiesCacheService", method)(
         constructor.prototype[method],
         method,
         descriptor
@@ -76,7 +91,7 @@ export function CacheServiceControllerMethods() {
         constructor.prototype,
         method
       );
-      GrpcStreamMethod("CacheService", method)(
+      GrpcStreamMethod("EntitiesCacheService", method)(
         constructor.prototype[method],
         method,
         descriptor
@@ -85,15 +100,19 @@ export function CacheServiceControllerMethods() {
   };
 }
 
-export const CACHE_SERVICE_NAME = "CacheService";
+export const ENTITIES_CACHE_SERVICE_NAME = "EntitiesCacheService";
 
 export interface PermissionsCacheServiceClient {
   doesUserHavePermission(
     request: DoesUserHavePermissionRequest
   ): Observable<Bool>;
 
+  addPermissionToUserInProject(
+    request: AddPermissionsToUserRequest
+  ): Observable<Void>;
+
   removePermissionsFromRole(
-    request: ChangeRolePermissionsRequest
+    request: RemovePermissionsFromRoleRequest
   ): Observable<Void>;
 }
 
@@ -102,8 +121,12 @@ export interface PermissionsCacheServiceController {
     request: DoesUserHavePermissionRequest
   ): Promise<Bool> | Observable<Bool> | Bool;
 
+  addPermissionToUserInProject(
+    request: AddPermissionsToUserRequest
+  ): Promise<Void> | Observable<Void> | Void;
+
   removePermissionsFromRole(
-    request: ChangeRolePermissionsRequest
+    request: RemovePermissionsFromRoleRequest
   ): Promise<Void> | Observable<Void> | Void;
 }
 
@@ -111,6 +134,7 @@ export function PermissionsCacheServiceControllerMethods() {
   return function (constructor: Function) {
     const grpcMethods: string[] = [
       "doesUserHavePermission",
+      "addPermissionToUserInProject",
       "removePermissionsFromRole",
     ];
     for (const method of grpcMethods) {

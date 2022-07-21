@@ -3,7 +3,7 @@ import { ClientsModule, Transport } from '@nestjs/microservices'
 import { join } from 'path'
 import 'dotenv/config'
 import { ProjectsModule } from 'src/projects/projects.module'
-import { CacheService } from './services/cache.service'
+import { EntitiesCacheService } from './services/entities-cache.service'
 import { PermissionsCacheService } from './services/permissions-cache.service'
 import { CACHE_PACKAGE_NAME } from './cache.pb'
 
@@ -26,11 +26,11 @@ import { CACHE_PACKAGE_NAME } from './cache.pb'
         ProjectsModule,
     ],
     providers: [
-        CacheService,
+        EntitiesCacheService,
         PermissionsCacheService,
     ],
     exports: [
-        CacheService,
+        EntitiesCacheService,
         PermissionsCacheService,
     ]
 })

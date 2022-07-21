@@ -7,7 +7,7 @@ import {
     DependenciesServiceClient,
     Dependency,
     CreateDependencyRequest,
-    DependenciesSearchParams,
+    SearchDependenciesParams,
 } from '../issues.pb'
 
 @Injectable()
@@ -26,7 +26,7 @@ export class DependenciesService {
         return firstValueFrom(this.dependenciesService.getDependencyById({ dependencyId }))
     }
 
-    public async searchDependencies(dto: DependenciesSearchParams): Promise<Observable<Dependency>> {
+    public searchDependencies(dto: SearchDependenciesParams): Observable<Dependency> {
         return this.dependenciesService.searchDependencies(dto)
     }
 

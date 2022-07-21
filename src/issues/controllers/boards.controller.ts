@@ -17,7 +17,7 @@ export class BoardsController {
         return this.boardsService.getBoardById(boardId)
     }
 
-    @Get('/search?projectId=:projectId')
+    @Get('/search?')
     @UseGuards(JwtAuthGuard)
     public async getBoardByProjectId(
         @Query('projectId') projectId: string,

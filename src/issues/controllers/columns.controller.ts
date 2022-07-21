@@ -18,12 +18,17 @@ export class ColumnsController {
         return this.columnsService.getColumnById(columnId)
     }
 
-    @Get('/search?boardId=:boardId')
+    @Get('/search?')
     @UseGuards(JwtAuthGuard)
     public async getColumnsByBoardId(
         @Query('boardId') boardId: string,
+        @Query('limit') limit: string,
     ): Promise<Observable<Column>> {
-        return this.columnsService.getColumnsByBoardId(boardId)
+        return this.columnsService.searchColumns({
+            boardId,
+            columnsIds: [],
+            limit: +limit
+        })
     }
 
     @Post('/')

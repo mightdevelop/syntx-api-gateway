@@ -5,16 +5,13 @@ import { PermissionsCacheService } from 'src/cache/services/permissions-cache.se
 import {
     Permission,
     PermissionId,
-    PermissionIdAndRoleId,
-    PermissionIdAndUserIdAndProjectId,
     PermissionsServiceClient,
     PERMISSIONS_SERVICE_NAME,
     ROLES_PACKAGE_NAME,
-    RoleId,
-    UserIdAndProjectId,
     Void,
     PermissionsIdsAndRoleId,
-    PermissionsIdsAndUserIdAndProjectId
+    PermissionsIdsAndUserIdAndProjectId,
+    SearchPermissionsParams
 } from '../roles.pb'
 
 @Injectable()
@@ -40,33 +37,10 @@ export class PermissionsService {
         return firstValueFrom(this.permissionsService.getPermissionById(dto))
     }
 
-    public async getPermissionsByRoleId(
-        dto: RoleId
-    ): Promise<Observable<Permission>> {
-        return this.permissionsService.getPermissionsByRoleId(dto)
-    }
-
-    public async getPermissionsByUserIdAndProjectId(
-        dto: UserIdAndProjectId
-    ): Promise<Observable<Permission>> {
-        return this.permissionsService.getPermissionsByUserIdAndProjectId(dto)
-    }
-
-    public async doesUserHavePermission(
-        dto: PermissionIdAndUserIdAndProjectId
-    ): Promise<boolean> {
-        let bool = await this.permissionsCacheService.doesUserHavePermission(dto)
-        if (bool) {
-            return bool
-        }
-        bool = (await firstValueFrom(this.permissionsService.doesUserHavePermission(dto))).bool
-        return bool
-    }
-
-    public async doesRoleHavePermission(
-        dto: PermissionIdAndRoleId
-    ): Promise<boolean> {
-        return (await firstValueFrom(this.permissionsService.doesRoleHavePermission(dto))).bool
+    public searchPermissions(
+        dto: SearchPermissionsParams
+    ): Observable<Permission> {
+        return this.permissionsService.searchPermissions(dto)
     }
 
     public async addPermissionsToRole(
