@@ -1,9 +1,9 @@
 - https://github.com/mightdevelop/syntx-api-gateway <- this repo
-- https://github.com/mightdevelop/syntx-users_microservice
-- https://github.com/mightdevelop/syntx-auth_microservice
-- https://github.com/mightdevelop/syntx-issues_microservice
-- https://github.com/mightdevelop/syntx-projects_microservice
-- https://github.com/mightdevelop/syntx-roles_microservice
-- https://github.com/mightdevelop/syntx-cache_microservice
+- https://github.com/mightdevelop/syntx-users-microservice
+- https://github.com/mightdevelop/syntx-auth-microservice
+- https://github.com/mightdevelop/syntx-issues-microservice
+- https://github.com/mightdevelop/syntx-projects-microservice
+- https://github.com/mightdevelop/syntx-roles-microservice
+- https://github.com/mightdevelop/syntx-cache-microservice
 - https://github.com/mightdevelop/syntx-eventbus
 - https://github.com/mightdevelop/syntx-protos
